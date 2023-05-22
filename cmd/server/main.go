@@ -14,7 +14,7 @@ func main() {
 		grpclog.Fatalf("failed to listen: %v", err)
 	}
 
-	server := grpc.NewServer([]grpc.ServerOption{})
+	server := grpc.NewServer()
 
 	stream.RegisterApiCallerScaleServer(server, &stream.UnimplementedApiCallerScaleServer{})
 
