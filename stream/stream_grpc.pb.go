@@ -130,8 +130,12 @@ type UnimplementedApiCallerScaleServer struct {
 func (UnimplementedApiCallerScaleServer) ScalesMessageOutChannel(ApiCallerScale_ScalesMessageOutChannelServer) error {
 	return status.Errorf(codes.Unimplemented, "method ScalesMessageOutChannel not implemented")
 }
-func (UnimplementedApiCallerScaleServer) SetTare(context.Context, *Empty) (*ResponseSetScale, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetTare not implemented")
+func (UnimplementedApiCallerScaleServer) SetTare(ctx context.Context, emp *Empty) (*ResponseSetScale, error) {
+	if emp == nil {
+		return nil, status.Errorf(codes.DataLoss, "no params")
+	}
+
+	return &ResponseSetScale{}, nil
 }
 func (UnimplementedApiCallerScaleServer) SetTareValue(context.Context, *RequestTareValue) (*ResponseSetScale, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetTareValue not implemented")
