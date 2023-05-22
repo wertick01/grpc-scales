@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
+	"github.com/wertick01/grpc-scales/stream"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
-	"steram.com/stream"
 )
 
 func main() {

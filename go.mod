@@ -1,4 +1,4 @@
-module steram.com
+module github.com/wertick01/grpc-scales
 
 go 1.20
 
