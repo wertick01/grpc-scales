@@ -1,6 +1,6 @@
 package server
 
-import "steram.com/stream"
+import "github.com/wertick01/grpc-scales/stream"
 
 type Server struct {
 	ScaleServer stream.ApiCallerScaleServer
