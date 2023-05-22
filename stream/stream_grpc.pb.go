@@ -4,6 +4,7 @@ package stream
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -124,32 +125,32 @@ type ApiCallerScaleServer interface {
 }
 
 // UnimplementedApiCallerScaleServer must be embedded to have forward compatible implementations.
-type UnimplementedApiCallerScaleServer struct {
+type ImplementedApiCallerScaleServer struct {
 }
 
-func (UnimplementedApiCallerScaleServer) ScalesMessageOutChannel(ApiCallerScale_ScalesMessageOutChannelServer) error {
+func (ImplementedApiCallerScaleServer) ScalesMessageOutChannel(ApiCallerScale_ScalesMessageOutChannelServer) error {
 	return status.Errorf(codes.Unimplemented, "method ScalesMessageOutChannel not implemented")
 }
-func (UnimplementedApiCallerScaleServer) SetTare(ctx context.Context, emp *Empty) (*ResponseSetScale, error) {
+func (impl *ImplementedApiCallerScaleServer) SetTare(ctx context.Context, emp *Empty) (*ResponseSetScale, error) {
 	if emp == nil {
 		return nil, status.Errorf(codes.DataLoss, "no params")
 	}
 
 	return &ResponseSetScale{}, nil
 }
-func (UnimplementedApiCallerScaleServer) SetTareValue(context.Context, *RequestTareValue) (*ResponseSetScale, error) {
+func (ImplementedApiCallerScaleServer) SetTareValue(context.Context, *RequestTareValue) (*ResponseSetScale, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetTareValue not implemented")
 }
-func (UnimplementedApiCallerScaleServer) SetZero(context.Context, *Empty) (*ResponseSetScale, error) {
+func (ImplementedApiCallerScaleServer) SetZero(context.Context, *Empty) (*ResponseSetScale, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetZero not implemented")
 }
-func (UnimplementedApiCallerScaleServer) GetInstantWeight(context.Context, *Empty) (*ResponseInstantWeight, error) {
+func (ImplementedApiCallerScaleServer) GetInstantWeight(context.Context, *Empty) (*ResponseInstantWeight, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInstantWeight not implemented")
 }
-func (UnimplementedApiCallerScaleServer) GetState(context.Context, *Empty) (*ResponseScale, error) {
+func (ImplementedApiCallerScaleServer) GetState(context.Context, *Empty) (*ResponseScale, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
 }
-func (UnimplementedApiCallerScaleServer) mustEmbedUnimplementedApiCallerScaleServer() {}
+func (ImplementedApiCallerScaleServer) mustEmbedUnimplementedApiCallerScaleServer() {}
 
 // UnsafeApiCallerScaleServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to ApiCallerScaleServer will

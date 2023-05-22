@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/wertick01/grpc-scales/cmd/client/protocols"
 	"github.com/wertick01/grpc-scales/stream"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
@@ -22,7 +23,13 @@ func main() {
 	defer conn.Close()
 
 	client := stream.NewApiCallerScaleClient(conn)
-	res, err := client.SetTare(context.Background(), &stream.Empty{})
+	tcpRes, err := client.SetTare(context.Background(), &stream.Empty{})
+	log.Println(tcpRes, err)
 
-	log.Println(res, err)
+	port, err := protocols.CreateSerialPort()
+	if err != nil {
+		panic(err)
+	}
+	comResp, err := port.SendRequestScale("", "", "")
+	log.Println(comResp, err)
 }
