@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
-	"github.com/wertick01/grpc-scales/cmd/server/app"
-	"github.com/wertick01/grpc-scales/cmd/server/config"
+	"github.com/wertick01/grpc-scales/server/app"
+	"github.com/wertick01/grpc-scales/server/config"
 )
 
 func main() {

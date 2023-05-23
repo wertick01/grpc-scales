@@ -7,9 +7,9 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/wertick01/grpc-scales/cmd/server/config"
-	"github.com/wertick01/grpc-scales/cmd/server/protocols"
 	"github.com/wertick01/grpc-scales/pkg/logger"
+	"github.com/wertick01/grpc-scales/server/config"
+	"github.com/wertick01/grpc-scales/server/protocols"
 	"github.com/wertick01/grpc-scales/stream"
 	"google.golang.org/grpc"
 )
