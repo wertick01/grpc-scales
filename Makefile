@@ -7,4 +7,4 @@ build-server:
 	sudo docker build -t grpc-scales .
 
 build-client:
-	cd cmd/client && go build -o reverse
+	cd client && go build -o reverse
