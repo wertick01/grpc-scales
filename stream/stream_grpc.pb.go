@@ -8,6 +8,8 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	"github.com/tarm/serial"	
+	"fmt"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -121,6 +123,7 @@ type ApiCallerScaleServer interface {
 	SetZero(context.Context, *Empty) (*ResponseSetScale, error)
 	GetInstantWeight(context.Context, *Empty) (*ResponseInstantWeight, error)
 	GetState(context.Context, *Empty) (*ResponseScale, error)
+	// ScalesMessage(context.Context, *RequestScale) (*ResponseScale, error)
 	mustEmbedUnimplementedApiCallerScaleServer()
 }
 
@@ -131,25 +134,140 @@ type ImplementedApiCallerScaleServer struct {
 func (ImplementedApiCallerScaleServer) ScalesMessageOutChannel(ApiCallerScale_ScalesMessageOutChannelServer) error {
 	return status.Errorf(codes.Unimplemented, "method ScalesMessageOutChannel not implemented")
 }
-func (impl *ImplementedApiCallerScaleServer) SetTare(ctx context.Context, emp *Empty) (*ResponseSetScale, error) {
-	if emp == nil {
-		return nil, status.Errorf(codes.DataLoss, "no params")
+
+//RS-232
+func (impl *ImplementedApiCallerScaleServer) SetTare(ctx context.Context, _ *Empty) (*ResponseSetScale, error) {
+	c := &serial.Config{Name: "COM1", Baud: 4800, Parity: 'E', StopBits: 1}
+	port, err := serial.OpenPort(c)
+	if err != nil {
+		return nil, err
+	}
+	defer port.Close()
+
+	_, err = port.Write([]byte("Set Tare"))
+	if err != nil {
+		return nil, err
 	}
 
-	return &ResponseSetScale{}, nil
+	buf := make([]byte, 128)
+	n, err := port.Read(buf)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &ResponseSetScale{}
+	if string(buf[:n]) == "CMD_NACK" {
+		resp.Error = "Command not supported"
+	} else {
+		resp.Error = ""
+	}
+	return resp, nil
 }
-func (ImplementedApiCallerScaleServer) SetTareValue(context.Context, *RequestTareValue) (*ResponseSetScale, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetTareValue not implemented")
+func (ImplementedApiCallerScaleServer) SetTareValue(ctx context.Context, req *RequestTareValue) (*ResponseSetScale, error) {
+	c := &serial.Config{Name: "COM1", Baud: 4800, Parity: 'E', StopBits: 1}
+	port, err := serial.OpenPort(c)
+	if err != nil {
+		return nil, err
+	}
+	defer port.Close()
+
+	_, err = port.Write([]byte(fmt.Sprintf("Set Tare Value: %s", req.Message)))
+	if err != nil {
+		return nil, err
+	}
+
+	buf := make([]byte, 128)
+	n, err := port.Read(buf)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &ResponseSetScale{}
+	if string(buf[:n]) == "CMD_NACK" {
+		resp.Error = "Command not supported"
+	} else {
+		resp.Error = ""
+	}
+	return resp, nil
 }
-func (ImplementedApiCallerScaleServer) SetZero(context.Context, *Empty) (*ResponseSetScale, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetZero not implemented")
+
+func (ImplementedApiCallerScaleServer) SetZero(ctx context.Context, _ *Empty) (*ResponseSetScale, error) {
+	c := &serial.Config{Name: "COM1", Baud: 4800, Parity: 'E', StopBits: 1}
+	port, err := serial.OpenPort(c)
+	if err != nil {
+		return nil, err
+	}
+	defer port.Close()
+
+	_, err = port.Write([]byte("Set Zero"))
+	if err != nil {
+		return nil, err
+	}
+
+	buf := make([]byte, 128)
+	n, err := port.Read(buf)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &ResponseSetScale{}
+	if string(buf[:n]) == "CMD_NACK" {
+		resp.Error = "Command not supported"
+	} else {
+		resp.Error = ""
+	}
+	return resp, nil
 }
+
 func (ImplementedApiCallerScaleServer) GetInstantWeight(context.Context, *Empty) (*ResponseInstantWeight, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetInstantWeight not implemented")
+	c := &serial.Config{Name: "COM1", Baud: 4800, Parity: 'E', StopBits: 1}
+	port, err := serial.OpenPort(c)
+	if err != nil {
+		return nil, err
+	}
+	defer port.Close()
+
+	_, err = port.Write([]byte("Get Instant Weight"))
+	if err != nil {
+		return nil, err
+	}
+
+	buf := make([]byte, 128)
+	n, err := port.Read(buf)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &ResponseInstantWeight{}
+	if string(buf[:n]) == "CMD_NACK" {
+		resp.Error = "Command not supported"
+		resp.Message = ""
+	} else {
+		resp.Error = ""
+		resp.Message = string(buf[:n])
+	}
+	return resp, nil
 }
+
 func (ImplementedApiCallerScaleServer) GetState(context.Context, *Empty) (*ResponseScale, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
+	return &ResponseScale{
+		Message: "State",
+		Type:    "RS-232",
+		Subtype: "Scales",
+	}, nil
 }
+
+// Ethernet, Wi-Fi
+// func (ImplementedApiCallerScaleServer) ScalesMessage(ctx context.Context, req *RequestScale) (*ResponseScale, error) {
+// 	// Реализация логики обмена данными по протоколам Ethernet и Wi-Fi
+// 	resp := &ResponseScale{
+// 		Message: "Message through Ethernet or Wi-Fi",
+// 		Type:    "Ethernet or Wi-Fi",
+// 		Subtype: "Scales",
+// 	}
+// 	return resp, nil
+// }
+
 func (ImplementedApiCallerScaleServer) mustEmbedUnimplementedApiCallerScaleServer() {}
 
 // UnsafeApiCallerScaleServer may be embedded to opt out of forward compatibility for this service.

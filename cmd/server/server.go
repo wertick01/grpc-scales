@@ -1,21 +1,28 @@
 package main
 
 import (
-	"context"
+	"net"
 
-	"github.com/wertick01/grpc-scales/cmd/server/app"
 	"github.com/wertick01/grpc-scales/cmd/server/config"
+	"github.com/wertick01/grpc-scales/stream"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
 	config, err := config.GetConfig()
 	if err != nil {
 		panic(err)
 	}
 
-	server := app.NewServer(config)
-	server.Run(ctx)
+	listen, err := net.Listen("tcp", config.ServerProt)
+	if err != nil {
+		panic(err)
+	}
+	s := grpc.NewServer()
+	stream.RegisterApiCallerScaleServer(s, &stream.ImplementedApiCallerScaleServer{})
+	reflection.Register(s)
+	if err := s.Serve(listen); err != nil {
+		panic(err)
+	}
 }
